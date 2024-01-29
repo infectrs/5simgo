@@ -1,5 +1,15 @@
 
-## Usage
+# 5SimGo
+
+Go Package to interact with 5Sim API
+
+
+
+## Installation
+
+```
+go get github.com/infectrs/5simgo/
+```## Usage
 
 ### Client
 
