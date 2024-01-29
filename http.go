@@ -1,4 +1,4 @@
-package main
+package simgo5
 
 import (
 	"io"
