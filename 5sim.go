@@ -3,6 +3,7 @@ package simgo5
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
 // Constants
@@ -12,7 +13,8 @@ const (
 
 // Sim5 is a struct that represents the 5Sim API Client
 type Sim5 struct {
-	apiKey string
+	apiKey     string
+	httpClient *http.Client
 }
 
 // New5Sim creates a new instance of Sim5 with the provided API key
@@ -22,18 +24,19 @@ func New5Sim(apiKey string) (*Sim5, error) {
 		return nil, missingApiKeyError
 	}
 
+	httpClient := newHttpClient()
+
 	return &Sim5{
-		apiKey: apiKey,
+		apiKey:     apiKey,
+		httpClient: httpClient,
 	}, nil
 }
 
 // // GetProfileInformation retrieves user profile information from the 5Sim API
 func (s Sim5) GetProfileInformation() (*ProfileInformation, error) {
 
-	client := newHttpClient()
-
 	url := fmt.Sprintf("https://%s/v1/user/profile", domain)
-	resp, err := executeRequest(client, url, s.apiKey)
+	resp, err := executeRequest(s.httpClient, url, s.apiKey)
 
 	if err != nil {
 		return nil, httpError
@@ -57,9 +60,7 @@ func (s Sim5) GetOrdersHistory(category string) (*OrdersInformation, error) {
 
 	url := fmt.Sprintf("https://%s/v1/user/orders?category=%s", domain, category)
 
-	client := newHttpClient()
-
-	resp, err := executeRequest(client, url, s.apiKey)
+	resp, err := executeRequest(s.httpClient, url, s.apiKey)
 
 	if err != nil {
 		return nil, httpError
@@ -78,9 +79,7 @@ func (s Sim5) GetOrdersHistory(category string) (*OrdersInformation, error) {
 func (s Sim5) GetPaymentsHistory() (*PaymentsInformation, error) {
 	url := fmt.Sprintf("https://%s/v1/user/payments", domain)
 
-	client := newHttpClient()
-
-	resp, err := executeRequest(client, url, s.apiKey)
+	resp, err := executeRequest(s.httpClient, url, s.apiKey)
 
 	if err != nil {
 		return nil, httpError
@@ -105,9 +104,7 @@ func (s Sim5) BuyActivationNumber(country, operator, product string) (*Purchased
 
 	url := fmt.Sprintf("https://%s/v1/user/buy/activation/%s/%s/%s", domain, country, operator, product)
 
-	client := newHttpClient()
-
-	resp, err := executeRequest(client, url, s.apiKey)
+	resp, err := executeRequest(s.httpClient, url, s.apiKey)
 
 	if err != nil {
 		return nil, httpError
@@ -131,9 +128,7 @@ func (s Sim5) BuyHostingNumber(country, operator, product string) (*PurchasedHos
 
 	url := fmt.Sprintf("https://%s/v1/user/buy/hosting/%s/%s/%s", domain, country, operator, product)
 
-	client := newHttpClient()
-
-	resp, err := executeRequest(client, url, s.apiKey)
+	resp, err := executeRequest(s.httpClient, url, s.apiKey)
 
 	if err != nil {
 		return nil, httpError
@@ -157,9 +152,7 @@ func (s Sim5) RebuyNumber(product, phoneNumber string) error {
 
 	url := fmt.Sprintf("https://%s/v1/user/reuse/%s/%s", domain, product, phoneNumber)
 
-	client := newHttpClient()
-
-	_, err := executeRequest(client, url, s.apiKey)
+	_, err := executeRequest(s.httpClient, url, s.apiKey)
 
 	if err != nil {
 		return httpError
@@ -177,9 +170,7 @@ func (s Sim5) CheckOrder(id string) (*SmsInformation, error) {
 
 	url := fmt.Sprintf("https://%s/v1/user/check/%s", domain, id)
 
-	client := newHttpClient()
-
-	resp, err := executeRequest(client, url, s.apiKey)
+	resp, err := executeRequest(s.httpClient, url, s.apiKey)
 
 	if err != nil {
 		return nil, httpError
@@ -204,9 +195,7 @@ func (s Sim5) FinishOrder(id string) (*SmsInformation, error) {
 
 	url := fmt.Sprintf("https://%s/v1/user/finish/%s", domain, id)
 
-	client := newHttpClient()
-
-	resp, err := executeRequest(client, url, s.apiKey)
+	resp, err := executeRequest(s.httpClient, url, s.apiKey)
 
 	if err != nil {
 		return nil, httpError
@@ -231,9 +220,7 @@ func (s Sim5) CancelOrder(id string) (*SmsInformation, error) {
 
 	url := fmt.Sprintf("https://%s/v1/user/cancel/%s", domain, id)
 
-	client := newHttpClient()
-
-	resp, err := executeRequest(client, url, s.apiKey)
+	resp, err := executeRequest(s.httpClient, url, s.apiKey)
 
 	if err != nil {
 		return nil, httpError
@@ -258,9 +245,7 @@ func (s Sim5) BanOrder(id string) (*SmsInformation, error) {
 
 	url := fmt.Sprintf("https://%s/v1/user/ban/%s", domain, id)
 
-	client := newHttpClient()
-
-	resp, err := executeRequest(client, url, s.apiKey)
+	resp, err := executeRequest(s.httpClient, url, s.apiKey)
 
 	if err != nil {
 		return nil, httpError
@@ -285,9 +270,7 @@ func (s Sim5) GetSmsInboxList(id string) (*SmsInbox, error) {
 
 	url := fmt.Sprintf("https://%s/v1/user/sms/inbox/%s", domain, id)
 
-	client := newHttpClient()
-
-	resp, err := executeRequest(client, url, s.apiKey)
+	resp, err := executeRequest(s.httpClient, url, s.apiKey)
 
 	if err != nil {
 		return nil, httpError
