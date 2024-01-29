@@ -9,7 +9,8 @@ Go Package to interact with 5Sim API
 
 ```
 go get github.com/infectrs/5simgo/
-```## Usage
+```
+## Usage
 
 ### Client
 
@@ -192,10 +193,3 @@ if err != nil {
 
 fmt.Printf("SMS Inbox List: %v", smsInboxList)
 ```
-
-
-
-
-
-
-
