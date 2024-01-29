@@ -5,10 +5,17 @@
 
 Firstly, initialize the 5Sim client with:
 
-```golang
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/infectrs/5simgo"
+)
+
 func main() {
 	apiKey := "ey..."
-	sim5Client, err := New5Sim(apiKey)
+	sim5Client, err := simgo5.New5Sim(apiKey)
 
 	if err != nil {
 		fmt.Println(err)
@@ -19,37 +26,159 @@ func main() {
 
 Then you can use the following methods:
 
-```golang
-// Retrieve profile information
-sim5Client.GetProfileInformation()
+### Retrieve Profile Information
+```go
+profile, err := sim5Client.GetProfileInformation()
 
-// Retrieve orders history
-sim5Client.GetOrdersHistory(category string)
+if err != nil {
+	fmt.Println(err)
+	return
+}
 
-// Retrieve payments history
-sim5Client.GetPaymentsHistory()
+fmt.Printf("Profile Information: %v", profile)
+```
 
-// Buy activation number
-sim5Client.BuyActivationNumber(country, operator, product string)
+### Retrieve Order History
+```go
+var category string = "" // hosting or activation
 
-// Buy hosting number
-sim5Client.BuyHostingNumber(country, operator, product string)
+ordersHistory, err := sim5Client.GetOrdersHistory(category)
 
-// Rebuy number
-sim5Client.RebuyNumber(product, phoneNumber string)
+if err != nil {
+	fmt.Println(err)
+	return
+}
 
-// Check order (get sms)
-sim5Client.CheckOrder(id string)
+fmt.Printf("Orders History: %v", ordersHistory)
+```
 
-// Finish order
-sim5Client.FinishOrder(id string)
+### Retrieve Payments History
+```go
+paymentsHistory, err := sim5Client.GetPaymentsHistory()
 
-// Cancel order
-sim5Client.CancelOrder(id string)
+if err != nil {
+	fmt.Println(err)
+	return
+}
 
-// Ban order
-sim5Client.BanOrder(id string)
+fmt.Printf("Payments History: %v", paymentsHistory)
+```
 
-// Get SMS Inbox List
-sim5Client.GetSmsInboxList(id string)
+### Purchase an activation phone number
+```go
+var (
+	country string = "any"
+	operator string = "any"
+	product string = "telegram"
+) // for more, visit 5sim website
+
+purchasedActivationNumberInfo, err := sim5Client.BuyActivationNumber(country, operator, product)
+
+if err != nil {
+	fmt.Println(err)
+	return
+}
+
+fmt.Printf("Purchased Activation Number Information: %v", purchasedActivationNumberInfo)
+```
+
+### Purchase an hosting phone number
+```go
+var (
+	country string = "any"
+	operator string = "any"
+	product string = "telegram"
+) // for more, visit 5sim website
+
+purchasedHostingNumberInfo, err := sim5Client.BuyHostingNumber(country, operator, product)
+
+if err != nil {
+	fmt.Println(err)
+	return
+}
+
+fmt.Printf("Purchased Hosting Number Information: %v", purchasedHostingNumberInfo)
+```
+
+### Rebuy a phone number
+```go
+var (
+	product string = "telegram" // for more, visit 5sim website
+	phoneNumber string = "" // 4-15 digits (without +)
+)
+	
+if err := sim5Client.RebuyNumber(product, phoneNumber); err != nil {
+	fmt.Println(err)
+	return
+}
+```
+
+### Check an SMS Order
+```go
+var orderId string = "123456"
+
+smsInformation, err := sim5Client.CheckOrder(orderId)
+
+if err != nil {
+	fmt.Println(err)
+	return
+}
+
+fmt.Printf("SMS Order Information: %v", smsInformation)
+```
+
+### Finish an SMS Order
+```go
+var orderId string = "123456"
+
+smsInformation, err := sim5Client.FinishOrder(orderId)
+
+if err != nil {
+	fmt.Println(err)
+	return
+}
+
+fmt.Printf("SMS Order Information: %v", smsInformation)
+```
+
+### Cancel an SMS Order
+```go
+var orderId string = "123456"
+
+smsInformation, err := sim5Client.CancelOrder(orderId)
+
+if err != nil {
+	fmt.Println(err)
+	return
+}
+
+fmt.Printf("SMS Order Information: %v", smsInformation)
+```
+
+### Ban an SMS Order
+```go
+var orderId string = "123456"
+
+smsInformation, err := sim5Client.BanOrder(orderId)
+
+if err != nil {
+	fmt.Println(err)
+	return
+}
+
+fmt.Printf("SMS Order Information: %v", smsInformation)
+```
+
+### Retrieve SMS Inbox List
+```go
+var orderId string = "123456"
+
+smsInboxList, err := sim5Client.GetSmsInboxList(orderId)
+
+if err != nil {
+	fmt.Println(err)
+	return
+}
+
+fmt.Printf("SMS Inbox List: %v", smsInboxList)
 ```
